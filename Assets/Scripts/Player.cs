@@ -2,35 +2,48 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private CharacterController character;
-    private Vector3 direction;
+
+    private CharacterController _character;
+    private Vector3 _direction;
+    private Animator _animator;
 
     public float gravity = 9.81f * 2f;
     public float jumpForce = 8f;
     private void Awake()
     {
-        character = GetComponent<CharacterController>();
+        _character = GetComponent<CharacterController>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
-        direction = Vector3.zero;
+        _animator.SetBool("isMoving", true);
+        _direction = Vector3.zero;
     }
 
     private void Update()
     {
-        direction += Vector3.down * (gravity * Time.deltaTime);
+        _direction += Vector3.down * (gravity * Time.deltaTime);
 
-        if (character.isGrounded)
+        if (_character.isGrounded)
         {
-            direction = Vector3.down;
+            _direction = Vector3.down;
 
             if (Input.GetButton("Jump"))
             {
-                direction = Vector3.up * jumpForce;
+                _direction = Vector3.up * jumpForce;
             }
         }
 
-        character.Move(direction * Time.deltaTime);
+        _character.Move(_direction * Time.deltaTime);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        _animator.SetBool("isMoving", false);
+        if (other.CompareTag("Obstacle"))
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 }

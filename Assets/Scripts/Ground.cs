@@ -10,7 +10,7 @@ public class Ground : MonoBehaviour
 
     private void Update()
     {
-        float speed = GameManager.Instance.gameSpeed / transform.localScale.x;
+        float speed = GameManager.Instance.GameSpeed / transform.localScale.x;
         _meshRenderer.material.mainTextureOffset += Vector2.right * (speed * Time.deltaTime);
     }
 }
